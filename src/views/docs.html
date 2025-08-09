@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoRota API - Documentação</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 48px 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .header h1 {
+            color: var(--gray-900);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            color: var(--gray-600);
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--success);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: var(--gray-700);
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            color: var(--gray-900);
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .section h3 {
+            color: var(--gray-800);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 32px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .endpoint {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .endpoint::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .endpoint:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: white;
+        }
+
+        .endpoint-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .method {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 60px;
+            justify-content: center;
+        }
+
+        .method.get { background: linear-gradient(135deg, #10b981, #059669); }
+        .method.post { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .method.put { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .method.patch { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .method.delete { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .code-block {
+            background: var(--gray-900);
+            color: #e2e8f0;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            position: relative;
+            border: 1px solid var(--gray-700);
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--gray-50), white);
+            padding: 32px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .feature-card h4 {
+            color: var(--gray-900);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            space-y: 8px;
+        }
+
+        .feature-card li {
+            color: var(--gray-700);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .auth-info {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-info::before {
+            content: '⚠️';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+        }
+
+        .auth-info strong {
+            margin-left: 40px;
+            color: var(--gray-800);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 64px;
+            color: white;
+            padding: 32px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            background: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header {
+                padding: 32px 24px;
+            }
+            
+            .content {
+                padding: 24px;
+            }
+            
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section h2 {
+                font-size: 1.875rem;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏍️ MotoRota API</h1>
+            <p class="subtitle">Sistema de Delivery para Empresas e Motoboys</p>
+            <div class="status">🟢 API Online</div>
+        </div>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="#overview">📋 Visão Geral</a></li>
+                <li><a href="#stats">📊 Estatísticas</a></li>
+                <li><a href="#auth">🔐 Autenticação</a></li>
+                <li><a href="#companies">🏢 Empresas</a></li>
+                <li><a href="#motoboys">🏍️ Motoboys</a></li>
+                <li><a href="#orders">📦 Pedidos</a></li>
+                <li><a href="#tracking">🔍 Rastreamento</a></li>
+                <li><a href="#examples">💻 Exemplos</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <section id="overview" class="section">
+                <h2>📋 Visão Geral</h2>
+                <p>O MotoRota é uma plataforma que conecta empresas que precisam de entregas com motoboys disponíveis, oferecendo rastreamento em tempo real, sistema de avaliações e gestão completa de pedidos.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🏢 Para Empresas</h4>
+                        <ul>
+                            <li>Cadastro com informações comerciais</li>
+                            <li>Criação e gestão de pedidos</li>
+                            <li>Acompanhamento em tempo real</li>
+                            <li>Sistema de avaliação de motoboys</li>
+                            <li>Relatórios e estatísticas</li>
+                            <li>Configuração de raio de entrega</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🏍️ Para Motoboys</h4>
+                        <ul>
+                            <li>Cadastro com documentação</li>
+                            <li>Sistema de disponibilidade</li>
+                            <li>Visualização de pedidos disponíveis</li>
+                            <li>Gestão de entregas</li>
+                            <li>Avaliação de empresas</li>
+                            <li>Controle de ganhos e estatísticas</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>⚡ Sistema de Entregas</h4>
+                        <ul>
+                            <li>Rastreamento em tempo real</li>
+                            <li>Múltiplos status de acompanhamento</li>
+                            <li>Sistema de prioridades</li>
+                            <li>Agendamento de entregas</li>
+                            <li>Avaliações bidirecionais</li>
+                            <li>Histórico completo</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="stats" class="section">
+                <h2>📊 Estatísticas da API</h2>
+                <p>Conheça os números da nossa plataforma em tempo real.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalEndpoints">50+</span>
+                        <span class="stat-label">Endpoints Disponíveis</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalModels">4</span>
+                        <span class="stat-label">Modelos de Dados</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="authProvider">Auth0</span>
+                        <span class="stat-label">Provedor de Autenticação</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="apiVersion">v1.0</span>
+                        <span class="stat-label">Versão da API</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="responseTime">< 100ms</span>
+                        <span class="stat-label">Tempo de Resposta</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="uptime">99.9%</span>
+                        <span class="stat-label">Disponibilidade</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="auth" class="section">
+                <h2>🔐 Autenticação</h2>
+                <p>A API utiliza Auth0 para autenticação. Todas as rotas protegidas requerem um token JWT válido.</p>
+                
+                <div class="auth-info">
+                    <strong>⚠️ Importante:</strong> Include o token no header Authorization: <code>Bearer &lt;seu-jwt-token&gt;</code>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/auth/config</code>
+                    </div>
+                    <p>Obter configurações do Auth0 para o frontend</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/protected</code>
+                    </div>
+                    <p>Teste de autenticação - Rota protegida para validar tokens</p>
+                </div>
+            </section>
+
+            <section id="companies" class="section">
+                <h2>🏢 Empresas</h2>
+                
+                <h3>Gestão de Perfil</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/companies/register</code>
+                    </div>
+                    <p>Registrar nova empresa no sistema</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/companies/profile</code>
+                    </div>
+                    <p>Obter perfil da empresa autenticada</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method put">PUT</span>
+                        <code>/api/companies/profile</code>
+                    </div>
+                    <p>Atualizar dados do perfil da empresa</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/companies/stats</code>
+                    </div>
+                    <p>Obter estatísticas e relatórios da empresa</p>
+                </div>
+
+                <h3>Rotas Públicas</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/companies</code>
+                    </div>
+                    <p>Listar empresas ativas (público)</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/companies/:id</code>
+                    </div>
+                    <p>Obter dados públicos de uma empresa específica</p>
+                </div>
+            </section>
+
+            <section id="motoboys" class="section">
+                <h2>🏍️ Motoboys</h2>
+                
+                <h3>Gestão de Perfil</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/motoboys/register</code>
+                    </div>
+                    <p>Registrar novo motoboy no sistema</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/motoboys/profile</code>
+                    </div>
+                    <p>Obter perfil do motoboy autenticado</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method patch">PATCH</span>
+                        <code>/api/motoboys/location</code>
+                    </div>
+                    <p>Atualizar localização atual do motoboy</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method patch">PATCH</span>
+                        <code>/api/motoboys/availability</code>
+                    </div>
+                    <p>Alterar disponibilidade para receber pedidos</p>
+                </div>
+
+                <h3>Para Empresas</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/motoboys/available</code>
+                    </div>
+                    <p>Listar motoboys disponíveis por região</p>
+                </div>
+            </section>
+
+            <section id="orders" class="section">
+                <h2>📦 Pedidos e Entregas</h2>
+                
+                <h3>Gestão de Pedidos</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/orders</code>
+                    </div>
+                    <p>Criar novo pedido (empresas)</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/orders/company</code>
+                    </div>
+                    <p>Listar pedidos da empresa</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/orders/motoboy</code>
+                    </div>
+                    <p>Listar pedidos do motoboy</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/orders/available</code>
+                    </div>
+                    <p>Listar pedidos disponíveis (motoboys)</p>
+                </div>
+
+                <h3>Ações de Entrega</h3>
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/orders/:id/accept</code>
+                    </div>
+                    <p>Aceitar pedido (motoboys)</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method patch">PATCH</span>
+                        <code>/api/orders/:id/status</code>
+                    </div>
+                    <p>Atualizar status da entrega</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/orders/:id/rate-delivery</code>
+                    </div>
+                    <p>Avaliar entrega (empresas avaliam motoboys)</p>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method post">POST</span>
+                        <code>/api/orders/:id/rate-company</code>
+                    </div>
+                    <p>Avaliar empresa (motoboys avaliam empresas)</p>
+                </div>
+            </section>
+
+            <section id="tracking" class="section">
+                <h2>🔍 Rastreamento</h2>
+                
+                <div class="endpoint">
+                    <div class="endpoint-title">
+                        <span class="method get">GET</span>
+                        <code>/api/track/:trackingCode</code>
+                    </div>
+                    <p>Rastrear pedido por código (público - sem autenticação)</p>
+                </div>
+
+                <p><strong>Status disponíveis:</strong></p>
+                <ul>
+                    <li><strong>pending</strong> - Pendente (aguardando motoboy)</li>
+                    <li><strong>accepted</strong> - Aceito por um motoboy</li>
+                    <li><strong>picked_up</strong> - Coletado no estabelecimento</li>
+                    <li><strong>in_transit</strong> - Em trânsito para entrega</li>
+                    <li><strong>delivered</strong> - Entregue com sucesso</li>
+                    <li><strong>cancelled</strong> - Cancelado</li>
+                </ul>
+            </section>
+
+            <section id="examples" class="section">
+                <h2>💻 Exemplos de Uso</h2>
+                
+                <h3>1. Registrar Empresa</h3>
+                <div class="code-block">
+curl -X POST {{baseUrl}}/api/companies/register \
+  -H "Authorization: Bearer &lt;jwt-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Pizzaria do João",
+    "email": "contato@pizzaria.com",
+    "phone": "(11) 99999-1111",
+    "cnpj": "12.345.678/0001-90",
+    "address": "Rua das Flores, 123, Centro, São Paulo, SP",
+    "coordinates": { "lat": -23.5505, "lng": -46.6333 },
+    "businessType": "restaurante"
+  }'
+                </div>
+
+                <h3>2. Criar Pedido</h3>
+                <div class="code-block">
+curl -X POST {{baseUrl}}/api/orders \
+  -H "Authorization: Bearer &lt;jwt-token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerName": "Ana Costa",
+    "customerPhone": "(11) 99999-4444",
+    "delivery": {
+      "address": "Rua das Palmeiras, 321, Jardins, São Paulo, SP",
+      "coordinates": { "lat": -23.5629, "lng": -46.6544 }
+    },
+    "items": [{
+      "name": "Pizza Margherita Grande",
+      "quantity": 1,
+      "price": 32.00
+    }],
+    "totalValue": 32.00,
+    "paymentMethod": "card"
+  }'
+                </div>
+
+                <h3>3. Rastrear Pedido</h3>
+                <div class="code-block">
+curl -X GET {{baseUrl}}/api/track/MR789456ABCD
+                </div>
+
+                <h3>4. Motoboy Aceitar Pedido</h3>
+                <div class="code-block">
+curl -X POST {{baseUrl}}/api/orders/123/accept \
+  -H "Authorization: Bearer &lt;jwt-token-motoboy&gt;"
+                </div>
+            </section>
+        </div>
+
+        <div class="footer">
+            <p>🏍️ MotoRota API v1.0.0 - Sistema de Delivery Inteligente</p>
+            <p>Desenvolvido com ❤️ usando Node.js, Express e Auth0</p>
+        </div>
+    </div>
+
+    <!-- Botão Voltar ao Topo -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        ↑
+    </button>
+
+    <script>
+        // Smooth scrolling para navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Controle do botão "Voltar ao Topo"
+        const backToTopButton = document.getElementById('backToTop');
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Mostrar/esconder botão baseado no scroll
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        // Highlight da navegação ativa
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -80% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active class from all nav links
+                    document.querySelectorAll('.nav a').forEach(link => {
+                        link.style.background = 'transparent';
+                        link.style.color = 'var(--gray-700)';
+                    });
+                    
+                    // Add active class to current section nav link
+                    const activeLink = document.querySelector(`.nav a[href="#${entry.target.id}"]`);
+                    if (activeLink) {
+                        activeLink.style.background = 'var(--primary)';
+                        activeLink.style.color = 'white';
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Atualizar base URL nos exemplos
+        const baseUrl = window.location.origin;
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.innerHTML = block.innerHTML.replace(/{{baseUrl}}/g, baseUrl);
+        });
+
+        // Verificar status da API e atualizar estatísticas
+        const statusElement = document.querySelector('.status');
+        const startTime = Date.now();
+
+        fetch('/health')
+            .then(response => {
+                const responseTime = Date.now() - startTime;
+                document.getElementById('responseTime').textContent = `${responseTime}ms`;
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('✅ API está funcionando corretamente');
+                    statusElement.innerHTML = '🟢 API Online';
+                    
+                    // Atualizar uptime
+                    const uptimeHours = Math.floor(data.uptime / 3600);
+                    const uptimeMinutes = Math.floor((data.uptime % 3600) / 60);
+                    document.getElementById('uptime').textContent = `${uptimeHours}h ${uptimeMinutes}m`;
+                } else {
+                    throw new Error('API retornou erro');
+                }
+            })
+            .catch(error => {
+                console.log('❌ Erro ao verificar status da API:', error);
+                statusElement.innerHTML = '🔴 API Offline';
+                statusElement.style.background = 'var(--danger)';
+                statusElement.style.animation = 'none';
+                document.getElementById('responseTime').textContent = 'N/A';
+                document.getElementById('uptime').textContent = 'Offline';
+            });
+
+        // Animação dos cards ao entrar na viewport
+        const animateOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Aplicar animação aos cards
+        document.querySelectorAll('.feature-card, .stat-card, .endpoint').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            animateOnScroll.observe(card);
+        });
+
+        // Adicionar animação CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Easter egg: Konami code
+        let konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    document.body.style.background = 'linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)';
+                    document.body.style.backgroundSize = '400% 400%';
+                    document.body.style.animation = 'rainbow 2s ease infinite';
+                    
+                    const rainbowStyle = document.createElement('style');
+                    rainbowStyle.textContent = `
+                        @keyframes rainbow {
+                            0% { background-position: 0% 50%; }
+                            50% { background-position: 100% 50%; }
+                            100% { background-position: 0% 50%; }
+                        }
+                    `;
+                    document.head.appendChild(rainbowStyle);
+                    
+                    setTimeout(() => {
+                        document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)';
+                        document.body.style.animation = 'none';
+                    }, 5000);
+                    
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Console message
+        console.log('%c🏍️ MotoRota API Documentation', 'color: #6366f1; font-size: 24px; font-weight: bold;');
+        console.log('%cBem-vindo à documentação da API! 🚀', 'color: #10b981; font-size: 16px;');
+        console.log('%cTente o código Konami para uma surpresa! ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA', 'color: #8b5cf6; font-size: 12px;');
+    </script>
+</body>
+</html>
