@@ -381,39 +381,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 24px 0;
-        }
 
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--gray-200);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
 
         .back-to-top {
             position: fixed;
@@ -505,7 +473,6 @@
         <nav class="nav">
             <ul>
                 <li><a href="#overview">📋 Visão Geral</a></li>
-                <li><a href="#stats">📊 Estatísticas</a></li>
                 <li><a href="#auth">🔐 Autenticação</a></li>
                 <li><a href="#companies">🏢 Empresas</a></li>
                 <li><a href="#motoboys">🏍️ Motoboys</a></li>
@@ -557,37 +524,7 @@
                 </div>
             </section>
 
-            <section id="stats" class="section">
-                <h2>📊 Estatísticas da API</h2>
-                <p>Conheça os números da nossa plataforma em tempo real.</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number" id="totalEndpoints">50+</span>
-                        <span class="stat-label">Endpoints Disponíveis</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="totalModels">4</span>
-                        <span class="stat-label">Modelos de Dados</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="authProvider">Auth0</span>
-                        <span class="stat-label">Provedor de Autenticação</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="apiVersion">v1.0</span>
-                        <span class="stat-label">Versão da API</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="responseTime">< 100ms</span>
-                        <span class="stat-label">Tempo de Resposta</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="uptime">99.9%</span>
-                        <span class="stat-label">Disponibilidade</span>
-                    </div>
-                </div>
-            </section>
+
 
             <section id="auth" class="section">
                 <h2>🔐 Autenticação</h2>
@@ -942,25 +879,15 @@ curl -X POST {{baseUrl}}/api/orders/123/accept \
             block.innerHTML = block.innerHTML.replace(/{{baseUrl}}/g, baseUrl);
         });
 
-        // Verificar status da API e atualizar estatísticas
+        // Verificar status da API
         const statusElement = document.querySelector('.status');
-        const startTime = Date.now();
 
         fetch('/health')
-            .then(response => {
-                const responseTime = Date.now() - startTime;
-                document.getElementById('responseTime').textContent = `${responseTime}ms`;
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     console.log('✅ API está funcionando corretamente');
                     statusElement.innerHTML = '🟢 API Online';
-                    
-                    // Atualizar uptime
-                    const uptimeHours = Math.floor(data.uptime / 3600);
-                    const uptimeMinutes = Math.floor((data.uptime % 3600) / 60);
-                    document.getElementById('uptime').textContent = `${uptimeHours}h ${uptimeMinutes}m`;
                 } else {
                     throw new Error('API retornou erro');
                 }
@@ -970,8 +897,6 @@ curl -X POST {{baseUrl}}/api/orders/123/accept \
                 statusElement.innerHTML = '🔴 API Offline';
                 statusElement.style.background = 'var(--danger)';
                 statusElement.style.animation = 'none';
-                document.getElementById('responseTime').textContent = 'N/A';
-                document.getElementById('uptime').textContent = 'Offline';
             });
 
         // Animação dos cards ao entrar na viewport
@@ -984,7 +909,7 @@ curl -X POST {{baseUrl}}/api/orders/123/accept \
         }, { threshold: 0.1 });
 
         // Aplicar animação aos cards
-        document.querySelectorAll('.feature-card, .stat-card, .endpoint').forEach(card => {
+        document.querySelectorAll('.feature-card, .endpoint').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             animateOnScroll.observe(card);
